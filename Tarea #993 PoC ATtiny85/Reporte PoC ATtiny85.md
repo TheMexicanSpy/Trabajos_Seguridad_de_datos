@@ -130,8 +130,8 @@ Como observan todos los recursos viene directo de la web, sin necesidad de abrir
 ![image](https://github.com/user-attachments/assets/192fc02c-fda5-435b-8fcf-3bd0c23077c1)
 
 Sin embargo existen un par de limitaciones:
-1. EL teclado de la computadora debe estar en **Inglés(Estados Unidos)**, pues de no ser así el powershell no se ejecutará adecuadamente y se cerrará instantáneamente.
-2. Si la computadora no tiene internet, los recursos no se pueden descargar.
+1. **EL teclado de la computadora debe estar en **Inglés(Estados Unidos)**, pues de no ser así el powershell no se ejecutará adecuadamente y se cerrará instantáneamente.**
+2. **Si la computadora no tiene internet, los recursos no se pueden descargar.**
 
 Aqui dejo el código completo:
 
@@ -187,7 +187,7 @@ void loop() {
     while (1); // Detiene el loop
 }
 ```
-##Conclusiones
+## Conclusiones
 
 Imagine usted que en lugar de una canción o una imagen, el archivo a descargar y ejecutar sea un malware que destruya una computadora
 desde dentro en segundos, o que contenga un programa que tome datos de tu computadora y los envie a mi correo...Estas aplicaciones son vitales a la hora de crear soluciones ante amenazas.
