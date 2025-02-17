@@ -75,7 +75,7 @@ de **Additional Board Manager URLs** se pega el link del *json*:
 
 Ahora si está disponible la placa necesaria para tener comunicación y carga de código.
 
-##Creación de PoC
+## Creación de PoC
 
 Ésta PoC será sencilla; crea un programa que abra powershell y que descargue archivos de la red hacia el escritorio de la PC y después abrirlos. AL principio tenía algo más grande en mente, pero ya verán a lo que me refiero...
 
