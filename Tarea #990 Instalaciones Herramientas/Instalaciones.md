@@ -6,7 +6,7 @@
 ***
 ## Vagrant
 ![image](https://github.com/user-attachments/assets/7de3fe7b-9752-42db-9253-2ab55c7db0b3)
-
+![image](https://github.com/user-attachments/assets/c5b811c8-3bb7-4a57-8252-186efa0841ad)
 ***
 ## Docker Desktop
 ![image](https://github.com/user-attachments/assets/37ea5a85-d59b-4f3e-8093-416e309b143b)
