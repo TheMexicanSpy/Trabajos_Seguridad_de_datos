@@ -16,3 +16,9 @@
 ***
 ## Level 4 -> Level 5
 ![image](https://github.com/user-attachments/assets/92770f16-5fa1-45f3-8572-3948bedf9312)
+## Level 5 -> Level 6
+![image](https://github.com/user-attachments/assets/741ed17a-8aab-4790-b187-2c0bed45dec7)
+***
+## Level 6 -> Level 7
+![image](https://github.com/user-attachments/assets/4aed1c8b-799f-4c40-8308-d8562ce2fecd)
+***
