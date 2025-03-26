@@ -15,11 +15,9 @@ El primer paso en el análisis de un sistema de este tipo es acceder a los archi
 *
 
     binwalk -e IoTGoat-x86.img
+![1](https://github.com/user-attachments/assets/7e1d1448-b945-49c9-8571-32f52d29ce00)
 
-![1](https://github.com/user-attachments/assets/b7ad9dd0-3ecf-46f0-8c54-220a39b2885d) 
-
-![2](https://github.com/user-attachments/assets/9fa1bca0-2c5e-4614-918d-fb9205b4d9d0)
-
+![2](https://github.com/user-attachments/assets/563de67d-a359-4535-bde2-881353e1b57b)
 
 El comando de extracción se ejecuta en el archivo de imagen IoTGoat-x86.img, lo que genera un directorio que contiene los datos descomprimidos llamado _IoTGoat-x86.img.extracted. Este paso es fundamental para poder manipular y observar los archivos relevantes del sistema operativo, como la configuración de los usuarios y contraseñas. Dentro de este directorio, se encuentra el sistema de archivos raíz, identificado como sasquashfs-root.
 *
@@ -33,14 +31,14 @@ El archivo passwd se encuentra en la ruta /etc/passwd dentro del sistema de arch
 
     cat _IoTGoat-x86.img.extracted/squashfs-root/etc/passwd
                                              
-![3](https://github.com/user-attachments/assets/d5cf004c-5d57-43a9-83c8-e2c150b8f945)
+![3](https://github.com/user-attachments/assets/fbd9136a-b89c-4c0e-bb3a-1f5a9011f7b4)
 
 
 Por otro lado, el archivo shadow, ubicado en la ruta /etc/shadow, almacena las contraseñas de los usuarios en formato hasheado. El formato es generalmente ‘usuario:contraseña hasheada’, y en este caso obtenemos lo siguiente:
 
     iotgoatuser:9bz0K8z$Ii6Q/if83F1QodGmkb4Ah.
 
-![4](https://github.com/user-attachments/assets/bf791aa9-bfde-4124-88cf-0ca111b77abc)
+![4](https://github.com/user-attachments/assets/3fb9cb5e-0476-4148-afd4-71122bbd7b04)
 
 Estos carácteres parece que no dicen nada ya que se encuentran cifrados. Descifrarlos podría tomar mucho tiempo, el cuál no tenemos. 
 *
@@ -52,7 +50,7 @@ En este escenario, se hace uso de una lista de contraseñas populares asociadas 
 *
 
     cat mirai-botnet-passwords.txt
-![5](https://github.com/user-attachments/assets/cffc6d67-6e9e-4079-93d4-fb0d404af06b)
+![5](https://github.com/user-attachments/assets/e7608c9c-aa73-4ab6-a4f6-6287ce372156)
 
 
 
@@ -66,8 +64,7 @@ Una vez que tenemos la lista de contraseñas, utilizamos una herramienta de fuer
 *
     medusa -u iotgoatuser -P mirai-botnet_passwords.txt -h 172.18.0.2 -M ssh -n 2222
 
-![6](https://github.com/user-attachments/assets/f111b0d7-9d16-4d53-8f44-6dcabc379adc)
-
+![6](https://github.com/user-attachments/assets/c5582119-18c6-4ace-ba47-3561fb079efd)
 
 
 El proceso de fuerza bruta consiste en probar cada contraseña hasta encontrar una combinación válida. Finalmente, Medusa indica que la combinación exitosa para el usuario iotgoatuser es la contraseña ‘7ujMko0vizxv’.
@@ -77,7 +74,7 @@ El proceso de fuerza bruta consiste en probar cada contraseña hasta encontrar u
 
 El último paso que queda es probar que la contraseña obtenida mediante fuerza bruta es la correcta. 
 
-![7](https://github.com/user-attachments/assets/4886efac-c466-45ad-a38b-fb9ed2fa4c08)
+![7](https://github.com/user-attachments/assets/38a78a4f-4f2b-46f5-b3a8-631875a9958a)
 
 
 Se ha completado la PoC y ahora tenemos acceso al sistema.
