@@ -31,3 +31,15 @@ Por lo tanto al insertar la instrucción completa y presonar enter en la url obt
 ![2 sqli](https://github.com/user-attachments/assets/61ea200e-75bf-42dc-b11d-61288ee9841e)
 
 La consulta nos devuelve todos los productos disponibles y no disponibles registrados en la base de datos. Como se dijo antes, estos tipos de ataques parecen inofensivos, pero si el sistema es lo suficientemente vulnerable, estos datos de productos pueden ser datos bancarios o información gubernamental secreta....<sub>No antojen...</sub>
+
+## Vulnerabilidad para saltar proceso de login
+Si se quiere hacer login es necesario tener usuario y contraseña y la aplicación realizaría alguna consulta SQL tal como:
+`SELECT firstname FROM users WHERE username='admin' and password='admin'`
+
+Obvio si ponemos estas credenciales nos indica que son incorrectas.Sin embargo podemos insertar los caracteres `'` y `--` (comentario) para que se realize una consulta así:
+`SELECT firstname FROM users WHERE username='administrator'--' and password='admin'`
+Por lo que la consulta ignora la parte de la contraseña y solo ocuparemos el nombre de usuario para realizar el inicio de sesión.
+
+![image](https://github.com/user-attachments/assets/7f5e0eb9-8015-4475-bff0-795dcdc92c2f)
+
+![image](https://github.com/user-attachments/assets/e32b100a-0bed-4dc9-932d-e2bb7f59711c)
