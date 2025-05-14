@@ -10,6 +10,7 @@ con un Wazuh-Manager, que nos permite acceder al Dashboard desde un navegador We
 
 Hay que mencionar que CentOS 7 ya ha sido descontinuado y que, muchas de las 
 funciones del instalador de paquetes `yum` y sus mirrors ya no sirven, lo cuál hacen el hardening más complicado de lo que es.
+
 ***
 ## Verificando configuración del sistema
 En un entorno recién instalado, junto con su configuración básica del CentOS 7, el 
@@ -18,4 +19,8 @@ compliance abarcaba el 20% aproximadamente.
 En este momento después de varios scripts encontrados por varias fuentes, el sistema se encuentra con una calificación del 46%
 
 ![image](https://github.com/user-attachments/assets/976c67dd-ccfc-4ace-8c14-1376dcc62477)
+
+Después de revisar manualmente más de compliances fallidos, alcancé una puntuación de 59% dee compliance.
+
+![image](https://github.com/user-attachments/assets/a47b5743-ea34-42b7-bf27-78386828fd4b)
 
